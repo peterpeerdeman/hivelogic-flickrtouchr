@@ -289,14 +289,17 @@ if __name__ == '__main__':
 
             # Grab the photos
             for photo in dom.getElementsByTagName("photo"):
-                # Tell the user we're grabbing the file
-                print photo.getAttribute("title").encode("utf8") + " ... in set ... " + dir
+                # Gab the title
+                phototitle = photo.getAttribute("title").encode("utf8");
 
+                # Tell the user we're grabbing the file
+                print phototitle + " ... in set ... " + dir
+                
                 # Grab the id
                 photoid = photo.getAttribute("id")
 
                 # The target
-                target = dir + "/" + photoid + ".jpg"
+                target = dir + "/" + photoid.decode('utf-8').encode(sys.getfilesystemencoding()) + ' - ' + phototitle + ".jpg"
 
                 # Skip files that exist
                 if os.access(target, os.R_OK):
