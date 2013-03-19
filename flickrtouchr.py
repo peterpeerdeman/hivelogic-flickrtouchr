@@ -28,6 +28,23 @@ import os
 
 API_KEY       = "e224418b91b4af4e8cdb0564716fa9bd"
 SHARED_SECRET = "7cddb9c9716501a0"
+USE_TITLE     = True;
+
+#slugify
+
+import re
+from unicodedata import normalize
+
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+
+def slugify(text, delim=u'-'):
+    """Generates an slightly worse ASCII-only slug."""
+    result = []
+    for word in _punct_re.split(text.lower()):
+        word = normalize('NFKD', word).encode('ascii', 'ignore')
+        if word:
+            result.append(word)
+    return unicode(delim.join(result))
 
 #
 # Utility functions for dealing with flickr authentication
@@ -289,17 +306,22 @@ if __name__ == '__main__':
 
             # Grab the photos
             for photo in dom.getElementsByTagName("photo"):
-                # Gab the title
-                phototitle = photo.getAttribute("title").encode("utf8");
+                # Grab the title
+                phototitle = photo.getAttribute("title")
 
                 # Tell the user we're grabbing the file
-                print phototitle + " ... in set ... " + dir
+                print phototitle.encode("utf-8") + " ... in set ... " + dir
                 
                 # Grab the id
                 photoid = photo.getAttribute("id")
+                
+                if USE_TITLE: 
+                    # Create a safe filename
+                    safetitle = slugify(phototitle)
 
-                # The target
-                target = dir + "/" + photoid.decode('utf-8').encode(sys.getfilesystemencoding()) + ' - ' + phototitle + ".jpg"
+                    target = dir + "/" + photoid + ' - ' + safetitle + ".jpg"
+                else: 
+                    target = dir + "/" + photoid + ".jpg";
 
                 # Skip files that exist
                 if os.access(target, os.R_OK):
