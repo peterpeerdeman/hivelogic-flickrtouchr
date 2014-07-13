@@ -274,7 +274,7 @@ if __name__ == '__main__':
 
     # Add the user's Favourites
     url   = "http://api.flickr.com/services/rest/?method=flickr.favorites.getList"
-    urls.append( (url, "Favourites") )
+    #urls.append( (url, "Favourites") )
 
     # Time to get the photos
     inodes = {}
