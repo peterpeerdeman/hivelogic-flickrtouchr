@@ -65,12 +65,13 @@ def getfrob():
     hash   = md5.new(string).digest().encode("hex")
 
     # Formulate the request
-    url    = "http://api.flickr.com/services/rest/?method=flickr.auth.getFrob"
+    url    = "https://api.flickr.com/services/rest/?method=flickr.auth.getFrob"
     url   += "&api_key=" + API_KEY + "&api_sig=" + hash
 
     try:
         # Make the request and extract the frob
         response = urllib2.urlopen(url)
+
     
         # Parse the XML
         dom = xml.dom.minidom.parse(response)
@@ -95,7 +96,7 @@ def froblogin(frob, perms):
     hash   = md5.new(string).digest().encode("hex")
 
     # Formulate the request
-    url    = "http://api.flickr.com/services/auth/?"
+    url    = "https://api.flickr.com/services/auth/?"
     url   += "api_key=" + API_KEY + "&perms=" + perms
     url   += "&frob=" + frob + "&api_sig=" + hash
 
@@ -120,7 +121,7 @@ def froblogin(frob, perms):
     hash   = md5.new(string).digest().encode("hex")
     
     # Formulate the request
-    url    = "http://api.flickr.com/services/rest/?method=flickr.auth.getToken"
+    url    = "https://api.flickr.com/services/rest/?method=flickr.auth.getToken"
     url   += "&api_key=" + API_KEY + "&frob=" + frob
     url   += "&api_sig=" + hash
 
@@ -173,7 +174,7 @@ def flickrsign(url, token):
 def getphoto(id, token, filename):
     try:
         # Contruct a request to find the sizes
-        url  = "http://api.flickr.com/services/rest/?method=flickr.photos.getSizes"
+        url  = "https://api.flickr.com/services/rest/?method=flickr.photos.getSizes"
         url += "&photo_id=" + id
     
         # Sign the request
@@ -238,7 +239,7 @@ if __name__ == '__main__':
         cache.close()
 
     # Now, construct a query for the list of photo sets
-    url  = "http://api.flickr.com/services/rest/?method=flickr.photosets.getList"
+    url  = "https://api.flickr.com/services/rest/?method=flickr.photosets.getList"
     url += "&user_id=" + config["user"]
     url  = flickrsign(url, config["token"])
 
@@ -259,7 +260,7 @@ if __name__ == '__main__':
         dir = unicodedata.normalize('NFKD', dir.decode("utf-8", "ignore")).encode('ASCII', 'ignore') # Normalize to ASCII
 
         # Build the list of photos
-        url   = "http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos"
+        url   = "https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos"
         url  += "&photoset_id=" + pid
 
         # Append to our list of urls
@@ -269,11 +270,11 @@ if __name__ == '__main__':
     dom.unlink()
 
     # Add the photos which are not in any set
-    url   = "http://api.flickr.com/services/rest/?method=flickr.photos.getNotInSet"
+    url   = "https://api.flickr.com/services/rest/?method=flickr.photos.getNotInSet"
     urls.append( (url, "No Set") )
 
     # Add the user's Favourites
-    url   = "http://api.flickr.com/services/rest/?method=flickr.favorites.getList"
+    url   = "https://api.flickr.com/services/rest/?method=flickr.favorites.getList"
     #urls.append( (url, "Favourites") )
 
     # Time to get the photos
